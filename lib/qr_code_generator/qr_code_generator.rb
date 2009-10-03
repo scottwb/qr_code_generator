@@ -1,4 +1,5 @@
 require 'rqrcode'
+require 'json'
 require 'RMagick'
 
 # The QRCodeGenerator class contains...TODO: document this.
@@ -36,6 +37,11 @@ module QRCodeGenerator
       :size   => nil,  # Default to no scaling.
       :format => 'png'
     }
+    
+    DEFAULT_HTML_OPTIONS = {
+      :margin => 4,   # QR Code spec requires min. 4 "module" white margin.
+      :size   => 200
+    }
 
 
     ############################################################
@@ -44,6 +50,8 @@ module QRCodeGenerator
     MAX_QR_SIZE = 40  # As per the QR Spec.
     BLACK_PIXEL = 0
     WHITE_PIXEL = 255
+    BLACK_CELL  = "#000000"
+    WHITE_CELL  = "#FFFFFF"
 
 
     ############################################################
@@ -128,6 +136,48 @@ module QRCodeGenerator
 
     def to_s
       @qr.to_s
+    end
+
+    def to_html(options = {})
+      html = nil
+
+      # Set the default options if they are unspecified.
+      opts = DEFAULT_HTML_OPTIONS.merge(options)
+
+      size   = opts[:size] / @width
+      margin = size * opts[:margin]
+
+      html =  "<table cellpadding=\"0\" cellspacing=\"0\">"
+      
+      html << "<tr>"
+      html << "<td style=\"width:#{margin}px;height:#{margin}px;background-color:#{WHITE_CELL};\"></td>"
+      @width.times do
+        html << "<td style=\"width:#{size}px;height:#{margin}px;background-color:#{WHITE_CELL};\"></td>"
+      end
+      html << "<td style=\"width:#{margin}px;height:#{margin}\"></td>"
+      html << "</tr>"
+
+      (0...@height).each do |row|
+        html << "<tr>"
+        html << "<td style=\"width:#{size}px;height:#{size}px;background-color:#{WHITE_CELL};\"></td>"
+        (0...@width).each do |col|
+          html << "<td style=\"width:#{size}px;height:#{size}px;background-color:#{@qr.is_dark(row, col) ? BLACK_CELL : WHITE_CELL};\"></td>"
+        end
+        html << "<td style=\"width:#{size}px;height:#{size}px;background-color:#{WHITE_CELL};\"></td>"
+        html << "</tr>"
+      end
+
+      html << "<tr>"
+      html << "<td style=\"width:#{margin}px;height:#{margin}px;background-color:#{WHITE_CELL};\"></td>"
+      @width.times do
+        html << "<td style=\"width:#{size}px;height:#{margin}px;background-color:#{WHITE_CELL};\"></td>"
+      end
+      html << "<td style=\"width:#{margin}px;height:#{margin}\"></td>"
+      html << "</tr>"
+
+      html << "</table>"
+
+      return html
     end
 
     def to_image(options = {})
