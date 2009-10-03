@@ -185,8 +185,6 @@ module QRCodeGenerator
 
         # Store the new image in the cache.
         @images[cache_key] = image
-      else
-        puts "base image in cache"
       end
     
       # Now we have the base image. If an img_size is specified, try to
@@ -195,7 +193,6 @@ module QRCodeGenerator
       if opts[:img_size]
         cache_key = "#{opts[:img_margin]}/#{opts[:img_size]}"
         if @images.has_key?(cache_key)
-          puts "scaled image in cache"
           image = @images[cache_key]
         else
           image = image.sample(opts[:img_size], opts[:img_size])
