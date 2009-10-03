@@ -6,16 +6,17 @@ require 'RMagick'
 # TODO:
 #   [X] Turn into class model.
 #   [X] Make image margin configurable.
-#   [ ] Add HTML table generation.
 #   [X] Add to_qr methods to Strings, Hash, and Array.
 #   [X] Maybe add to_qr to ActiveRecord::Base
-#   [ ] Write docs.
+#   [X] Check in to github.
+#   [ ] Add HTML table generation.
 #   [ ] Figure out a better way to compute the min size that trial and error.
-#   [ ] Make into a plugin gem. Make it have a dependency on rqrcode.
 #   [ ] Cleanup REVISITs
-#   [ ] Check in to github.
-#   [ ] Build test cases or maybe even rspec for the plugin.
+#   [ ] Write comment documentation.
 #   [ ] Add rdoc/ri tasks.
+#   [ ] Write wiki documentation.
+#   [ ] Build runit test cases and/or maybe even rspec for the plugin.
+#   [ ] Make into a plugin gem. Make it have a dependency on rqrcode.
 #   [ ] Submit to rubyforge?
 #
 module QRCodeGenerator
@@ -25,15 +26,15 @@ module QRCodeGenerator
     # Configuration
     ############################################################
     DEFAULT_QR_OPTIONS = {
-      :qr_min_size => 1,
-      :qr_level    => :h,
-      :qr_encoding => :json
+      :min_size => 1,
+      :level    => :h,
+      :encoding => :json
     }
 
     DEFAULT_IMG_OPTIONS = {
-      :img_margin => 4,    # QR Code spec requries min. 4 "module" white margin.
-      :img_size   => nil,  # Default to no scaling.
-      :img_format => 'png'
+      :margin => 4,    # QR Code spec requries min. 4 "module" white margin.
+      :size   => nil,  # Default to no scaling.
+      :format => 'png'
     }
 
 
@@ -90,14 +91,14 @@ module QRCodeGenerator
              when String
                data
              else
-               case @options[:qr_encoding]
+               case @options[:encoding]
                when :json    then data.to_json
                when :xml     then data.to_xml
                when :yaml    then data.to_yaml
                when :marshal then Base64.encode64(Marshal.dump(data))
                when :string  then data.to_s
                else
-                 raise "Invalid qr_encoding: #{@options[:qr_encoding].inspect}"
+                 raise "Invalid qr_encoding: #{@options[:encoding].inspect}"
                end
              end
 
@@ -107,7 +108,7 @@ module QRCodeGenerator
       #
       # REVISIT: There must be a better way to precompute what size we need.
       #
-      (@options[:qr_min_size]..MAX_QR_SIZE).each do |size|
+      (@options[:min_size]..MAX_QR_SIZE).each do |size|
         begin
           @qr = RQRCode::QRCode.new(
             str,
@@ -138,14 +139,14 @@ module QRCodeGenerator
       # Create a unique key by which this image is/will be cached
       # on this instance. We only need to generate a different image if
       # the margin is different.
-      cache_key = opts[:img_margin].to_s
+      cache_key = opts[:margin].to_s
 
       # First try to Get the cached image. If it's not cached, then create it.
       image = @images[cache_key]
       if image.nil?
         # Figure out the size of the base image based on the number of
         # modules in the QR Code and the size of the margin.
-        margin     = opts[:img_margin]
+        margin     = opts[:margin]
         img_width  = @width  + (2 * margin)
         img_height = @height + (2 * margin)
     
@@ -190,12 +191,12 @@ module QRCodeGenerator
       # Now we have the base image. If an img_size is specified, try to
       # lookup a cached image at that size, or create a scaled copy of
       # the base image at that size if it doesn't exist, and then cache it.
-      if opts[:img_size]
-        cache_key = "#{opts[:img_margin]}/#{opts[:img_size]}"
+      if opts[:size]
+        cache_key = "#{opts[:margin]}/#{opts[:size]}"
         if @images.has_key?(cache_key)
           image = @images[cache_key]
         else
-          image = image.sample(opts[:img_size], opts[:img_size])
+          image = image.sample(opts[:size], opts[:size])
           @images[cache_key] = image
         end
       end
@@ -208,7 +209,7 @@ module QRCodeGenerator
       opts = DEFAULT_IMG_OPTIONS.merge(options)
 
       return self.to_image(opts).to_blob do
-        self.format = opts[:img_format]
+        self.format = opts[:format]
       end
     end
 
