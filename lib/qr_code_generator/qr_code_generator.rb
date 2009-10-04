@@ -10,7 +10,7 @@ require 'RMagick'
 #   [X] Add to_qr methods to Strings, Hash, and Array.
 #   [X] Maybe add to_qr to ActiveRecord::Base
 #   [X] Check in to github.
-#   [ ] Add HTML table generation.
+#   [X] Add HTML table generation.
 #   [ ] Figure out a better way to compute the min size that trial and error.
 #   [ ] Cleanup REVISITs
 #   [ ] Write comment documentation.
