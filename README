@@ -1,0 +1,57 @@
+== QRCodeGenerator
+
+QRCodeGenerator is a library for encoding Ruby objects such as String, Array, Hash into QR Code images. It is relies on the rQRCode library by Duncan Robertson for QR Code encoding, and the RMagick library for generating images.
+
+"QR Code" is trademarked by Denso Wave Inc.
+
+RubyForge Project Page: TBD
+
+== Resources
+
+Wikipedia:: http://en.wikipedia.org/wiki/QR_Code
+Denso-Wave:: http://www.denso-wave.com/qrcode/index-e.html
+rQRCode:: http://rubyforge.org/projects/rqrcode/
+
+== Installing
+
+Eventually, you will be able to install the latest stable version as a gem from RubyForge...but not yet.
+
+You can get the source from http://github.com/scottwb/qr_code_generator/tree/master
+
+  $ git clone git://github.com/scottwb/qr_code_generator.git
+
+== Dependencies
+
+QRCodeGenerator requires the following gems:
+
+  * JSON
+  * rQRCode
+  * RMagick
+
+== Using QRCodeGenerator
+
+The easiest way to use it is via the core extensions, which provide the to_qr instance method on a number of common classes.
+
+=== Loading QRCodeGenerator
+
+  require 'rubygems'
+  require 'qr_code_generator'
+
+=== Simple QR Code Test
+
+  puts "hello world".to_qr.to_s
+
+==== Simple QR Code HTML Rendering
+
+  <%= {:name => "Scott", :id => 123}.to_qr(:encoding => :json).to_html(:size => 500) %>
+
+==== Simple QR Code Image Rendering
+
+  "http://www.scottwb.com/".to_qr.to_image_file("test.png", :size => 200)
+
+== Contact
+
+Author:: Scott W. Bradley
+Email:: scottwb@gmail.com
+Home Page:: TBD
+License:: MIT License (http://www.opensource.org/licenses/mit-license.html)
