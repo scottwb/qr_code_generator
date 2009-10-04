@@ -5,22 +5,9 @@
 # Permission is granted for use, copying, modification, distribution,
 # and distribution of modified versions of this work as long as the above
 # copyright notice is included.
-#
-# TODO:
-#   [ ] Add ability to overlay an image.
-#   [ ] Figure out a better way to compute the min QR size than trial and error.
-#   [ ] Optimize the to_image generation of pixel data.
-#   [ ] Add rdoc/ri tasks.
-#   [ ] Write wiki documentation.
-#   [ ] Build runit test cases and/or maybe even rspec for the plugin.
-#   [ ] Make into a plugin gem with dependencies on:
-#         * RQRCode
-#         * RMagick
-#         * JSON
-#   [ ] Submit to rubyforge?
-#
 #++
 
+require 'rubygems'
 require 'rqrcode'
 require 'json'
 require 'RMagick'

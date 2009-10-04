@@ -1,0 +1,8 @@
+* Add ability to overlay an image.
+* Figure out a better way to compute the min QR size (type number) than just
+  using trial and error until we find one that works.
+* Optimze the to_image generation of pixel data.
+* Write wiki documentation.
+* Build real test cases.
+* Maybe checkout rspec and do something with that.
+* Submit to rubyforge?

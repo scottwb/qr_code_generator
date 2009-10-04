@@ -7,8 +7,10 @@
 # copyright notice is included.
 #++
 
-$:.unshift(File.dirname(__FILE__))
-
-require File.dirname(__FILE__) + '/qr_code_generator/qr_code_generator'
-require File.dirname(__FILE__) + '/qr_code_generator/core_ext'
-require File.dirname(__FILE__) + '/qr_code_generator/rails'
+[
+  'qr_code_generator',
+  'core_ext',
+  'rails'
+].each do |f|
+  require File.dirname(__FILE__) + "/qr_code_generator/#{f}"
+end

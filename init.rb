@@ -6,6 +6,4 @@
 # and distribution of modified versions of this work as long as the above
 # copyright notice is included.
 #++
-$:.unshift File.dirname(__FILE__) + '/lib'
-
 require File.dirname(__FILE__) + '/lib/qr_code_generator'
